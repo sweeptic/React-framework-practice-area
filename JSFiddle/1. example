@@ -1,0 +1,77 @@
+function NewComponent(props) {
+	return <p onClick={()=> {
+		return props.nameClickedHandler(props.username)}}>
+    {props.username}</p>
+
+}
+
+class App extends React.Component{
+
+  constructor(props) {
+    super(props);
+    this.state = {
+        name: props.name,
+        elements: [],
+        message: ''
+      }
+  }
+  
+  changeName() {
+  	this.setState({name:'Anna'})
+  }
+  
+  newElement() {
+  	const oldElements = this.state.elements;
+  	this.setState({
+    	elements: oldElements.concat(oldElements.length + 1)
+    })
+  }
+  
+  newText(event) {
+  	this.setState({
+    	message: event.target.value
+    })
+  }
+  
+  userWasClicked(name) {
+  	alert(name);
+  }
+
+  render() {
+  let nameChanged = '';
+  let nameUpdated= '';
+  if(this.state.name != this.props.name){
+  	nameChanged = 'updated';
+    nameUpdated = <p>Name Updated!</p>
+  }
+  
+  let list = this.state.elements.map((el) =>
+  	{
+    	const liStyle = {backgroundColor:  el % 2 == 0 ? 'blue' : 'red' }
+  		return <li style={ liStyle } key={el}>{el}</li>
+  	});
+  
+		return (
+    	<div>
+      
+        <NewComponent nameClickedHandler={this.userWasClicked} username='Max'/>
+        <NewComponent nameClickedHandler={this.userWasClicked} username='Anna'/>
+        <p className={nameChanged}>{this.state.name}</p>
+        {nameUpdated}
+    	  <button onClick={this.changeName.bind(this)}>Change Name</button>
+        <button onClick={this.newElement.bind(this)}>New Element</button>
+        <ul>
+          {list}
+        </ul>
+        <input
+        value={this.state.message}
+        type="text"
+        onChange={this.newText.bind(this)}>
+        </input>
+        <p>{this.state.message}</p>
+    	</div>
+    )
+  }
+}
+
+ReactDOM.render(<App name="Max"/>, document.querySelector("#app"));

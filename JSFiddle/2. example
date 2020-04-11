@@ -1,0 +1,83 @@
+function HobbyComponent(props){
+	return (<p>{props.list}</p>)
+}
+
+class App extends React.Component {
+
+constructor(props) {
+	super(props);
+	this.state = {
+  	hobbyes: ['running', 'bicycle'],
+    inputText: '',
+    leastOneDeleted: false
+  }
+}
+
+	setText(event) {
+  	this.setState({
+  		inputText: event.target.value
+  	})
+  }
+
+  addHobby() { 
+  	if(this.state.inputText.trim() === '') return
+  	const oldHobbyes = this.state.hobbyes;
+  	this.setState({
+  		hobbyes: oldHobbyes.concat(this.state.inputText)
+  	})
+  }
+  
+  removeHobby(event) {
+  	this.setState({
+    	leastOneDeleted: true,
+  		hobbyes: this.state.hobbyes.filter((item, index) => 
+      {return index + 1 !== event.target.value})    
+  	})
+  }
+  
+	render() {
+  let hobbyCounter = this.state.hobbyes.length;
+  let hobbyDeleted = '';
+  let redStyle = ''
+  let color = {fontSize: 16};
+  let i = 0;
+  let list = this.state.hobbyes.map((el) => {
+  	i++;
+  	return <li 
+    onClick={this.removeHobby.bind(this)} 
+    key={i} 
+    value={i}>{el}</li>
+  })
+  
+  if(hobbyCounter > 3 ){ 
+  	redStyle = 'updated';
+    color = {fontSize: 20};
+    }
+      
+  if(this.state.leastOneDeleted) { hobbyDeleted = <p>Hobby Deleted!</p> }
+  
+ 
+  
+   return (
+     <div>
+       <input          
+         value={this.state.inputText}
+         onChange={this.setText.bind(this)}
+         type="text">        
+       </input> <br></br> 
+       <button onClick={this.addHobby.bind(this)}>Add Hobby</button>  <br></br> 
+       <p style={ color } className={ redStyle } >{hobbyCounter}</p>  
+       <p>{hobbyDeleted}</p>    
+         <ul>
+           {list}
+         </ul>
+         <p>-----------------</p>
+         <HobbyComponent list={list}/>
+         <HobbyComponent list={list}/>    
+     </div>
+   )
+	}
+}
+
+
+ReactDOM.render(<App/>, document.querySelector("#app"));
